@@ -5,6 +5,8 @@ This is a learning project. I'm working through Casey Muratori's article
 small C demo, so I can feel the technique in my hands instead of just reading
 about it.
 
+Reference the article [here](./article.md)
+
 ## Most important: how to help me
 
 I want to write the actual layout code **from scratch myself**. The whole point

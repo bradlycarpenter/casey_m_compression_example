@@ -1,14 +1,5 @@
 #include "raylib.h"
 
-typedef struct Panel
-{
-  float x, y;             // top-left origin of the panel, in screen pixels
-  float width;            // "my_width" in the article
-  float height;           // "my_height" — you'll compute this
-  float ypad;             // vertical padding
-  float character_height; // stand-in for body_font->character_height
-} Panel;
-
 static float draw_title(float x, float y, const char *title)
 {
   int font = 20;
@@ -38,23 +29,67 @@ draw_big_text_button(float x, float y, float w, float h, const char *label)
   return click;
 }
 
+typedef struct Panel
+{
+  float x, y;             // top-left origin of the panel, in screen pixels
+  float width;            // "my_width" in the article
+  float height;           // "my_height" — you'll compute this
+  float ypad;             // vertical padding
+  float character_height; // stand-in for body_font->character_height
+} Panel;
+
+typedef struct Panel_Layout
+{
+  float width;
+  float row_height;
+  float at_x;
+  float at_y;
+  float top_y;
+} Panel_Layout;
+
+void panel_layout_init(
+    Panel_Layout *pl, Panel *panel, float left_x, float top_y, float width)
+{
+  pl->row_height = panel->ypad + 1.2 * panel->character_height;
+  pl->at_x       = left_x;
+  pl->at_y       = top_y;
+  pl->top_y      = top_y;
+}
+
+void panel_layout_row(Panel_Layout *pl) { pl->at_y += pl->row_height; }
+
+void panel_layout_window_title(Panel_Layout *pl, char *title)
+{
+  float title_height = draw_title(pl->at_x, pl->at_y, title);
+  pl->at_y += title_height;
+}
+
+void panel_layout_complete(Panel_Layout *pl, Panel *panel)
+{
+  panel->height = pl->top_y - pl->at_y;
+}
+
 static void render_panel(Panel *panel)
 {
-  int   num_categories  = 4;
-  int   category_height = panel->ypad + 1.2 * panel->character_height;
-  float x0              = panel->x;
-  float y0              = panel->y;
-  float title_height    = draw_title(x0, y0, "Title");
-  float height  = title_height + num_categories * category_height + panel->ypad;
-  panel->height = height;
-  y0 += title_height;
+  Panel_Layout layout;
+  panel_layout_init(&layout, panel, panel->x, panel->y, panel->width);
+  panel_layout_window_title(&layout, "Title");
 
   {
-    y0 += category_height;
-    char *string = "Auto Snap";
-    bool  pressed =
-        draw_big_text_button(x0, y0, panel->width, category_height, string);
+    panel_layout_row(&layout);
+    char *string  = "Auto Snap";
+    bool  pressed = draw_big_text_button(
+        layout.at_x, layout.at_y, panel->width, layout.row_height, string);
   }
+
+  {
+    panel_layout_row(&layout);
+    char *string  = "Reset Orientation";
+    bool  pressed = draw_big_text_button(
+        layout.at_x, layout.at_y, panel->width, layout.row_height, string);
+  }
+
+  panel_layout_complete(&layout, panel);
 }
 
 int main(void)
