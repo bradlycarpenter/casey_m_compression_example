@@ -69,6 +69,12 @@ void panel_layout_complete(Panel_Layout *pl, Panel *panel)
   panel->height = pl->top_y - pl->at_y;
 }
 
+void panel_layout_push_button(Panel_Layout *pl, char *text)
+{
+  bool result = draw_big_text_button(
+      pl->at_x, pl->at_y, pl->width, pl->row_height, "text");
+}
+
 static void render_panel(Panel *panel)
 {
   Panel_Layout layout;
@@ -77,16 +83,14 @@ static void render_panel(Panel *panel)
 
   {
     panel_layout_row(&layout);
-    char *string  = "Auto Snap";
-    bool  pressed = draw_big_text_button(
-        layout.at_x, layout.at_y, panel->width, layout.row_height, string);
+    char *string = "Auto Snap";
+    panel_layout_push_button(&layout, string);
   }
 
   {
     panel_layout_row(&layout);
-    char *string  = "Reset Orientation";
-    bool  pressed = draw_big_text_button(
-        layout.at_x, layout.at_y, panel->width, layout.row_height, string);
+    char *string = "Reset Orientation";
+    panel_layout_push_button(&layout, string);
   }
 
   panel_layout_complete(&layout, panel);
