@@ -1,0 +1,10 @@
+BasedOnStyle: LLVM
+BreakBeforeBraces: Allman
+AlignAfterOpenBracket: AlwaysBreak
+BinPackParameters: false
+BinPackArguments: false
+ColumnLimit: 80
+AlignConsecutiveDeclarations:
+  Enabled: true
+AlignConsecutiveAssignments:
+  Enabled: true
