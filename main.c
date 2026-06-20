@@ -81,17 +81,11 @@ static void render_panel(Panel *panel)
   panel_layout_init(&layout, panel, panel->x, panel->y, panel->width);
   panel_layout_window_title(&layout, "Title");
 
-  {
-    panel_layout_row(&layout);
-    char *string = "Auto Snap";
-    panel_layout_push_button(&layout, string);
-  }
+  panel_layout_row(&layout);
+  panel_layout_push_button(&layout, "Auto Snap");
 
-  {
-    panel_layout_row(&layout);
-    char *string = "Reset Orientation";
-    panel_layout_push_button(&layout, string);
-  }
+  panel_layout_row(&layout);
+  panel_layout_push_button(&layout, "Reset Orientation");
 
   panel_layout_complete(&layout, panel);
 }
